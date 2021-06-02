@@ -22,3 +22,34 @@ MapPartitions :Use Case : (If we want to add the timestamp column, or if we want
   
   Cogroup - similar to full outer join
   
+  Spark Exercises Problem 1:
+  MYSQL Sqoop connection :
+  
+   sqoop eval --connect jdbc:mysql://ms.itversity.com/retail_db --username retail_user --password itversity --e "SELECT count(1) from orders"
+     sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db --username retail_user --password itversity --table customers --as-textfile --fields-terminated-by '|' --warehouse-dir set1/problem1 --delete-target-dir
+  sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db --username retail_user --password itversity --table orders --as-textfile --fields-terminated-by '|' --warehouse-dir set1/problem1 --delete-target-dir
+  
+  To find the pending Orders in the city :
+  
+  Handling Tuples in Spark :
+  Answer in RDD :
+  rdd1 =sc.textFile("/user/itv000076/set1/problem1/customers")
+  rdd2= sc.textFile("/user/itv000076/set1/problem1/orders")
+   rdd3 = rdd2.filter(map x: x.split('|')[3]=='PENDING')
+  rdd4 = rdd1.map(lambda x: x.split('|')[0], x.split('|')[6])
+  rdd5 =rdd3.map(lambda x :(x.split('|')[2], x.split('|')[3]))
+ rdd6 =rdd4.join(rdd5)
+   rdd7 = rdd6.map(lambda x: (x[1][0], 1))
+ rdd8 = rdd7.reduceByKey(lambda x,y : x+y).sortByKey()
+  
+  Answer in DataFrame:
+  
+  
+
+
+  rdd2 = rdd1.filter(lambda x :(x.split('|')[6], x.split('|')[0]))
+ rdd2 = rdd1.map(lambda (x,y) :(x.split('|')[6], 1))
+
+  > rdd7 = rdd6.map(lambda x: (x[1][0], x[0]))
+
+  
