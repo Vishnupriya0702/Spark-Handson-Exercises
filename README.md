@@ -43,6 +43,15 @@ MapPartitions :Use Case : (If we want to add the timestamp column, or if we want
  rdd8 = rdd7.reduceByKey(lambda x,y : x+y).sortByKey()
   
   Answer in DataFrame:
+val customers=spark.read.option("sep","|").option("inferSchema","true").csv("/user/cloudera/set1/problem1/customers")
+val cust=customers.select("_c0","_c6").toDF("customer_id","city")
+val orders=spark.read.option("sep","|").option("inferSchema","true").csv("/user/cloudera/set1/problem1/orders")
+val odr=orders.select("_c2","_c3").toDF("customer_id","order_status")  
+ filterdata =odr.filter(odr.order_status=='PENDING')
+  joindata = filterdata.join(cust, filterdata.customer_id==cust.customer)
+groupbydata = joindata.groupBy("city").count().sort("city")
+
+  
   
   
 
