@@ -60,5 +60,10 @@ groupbydata = joindata.groupBy("city").count().sort("city")
  rdd2 = rdd1.map(lambda (x,y) :(x.split('|')[6], 1))
 
   > rdd7 = rdd6.map(lambda x: (x[1][0], x[0]))
+  
+  
+  Parquet Files: cannot be read in RDD
+  We can read through SQL COntext, SparkSession.
+  
 
   
