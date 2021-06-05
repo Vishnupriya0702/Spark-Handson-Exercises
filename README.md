@@ -108,5 +108,6 @@ groupbydata = joindata.groupBy("city").count().sort("city")
   
   Fixed width file format can be read only via applying substr, as all data will be read in a single column.
   
-  
+  Spark.read.table - is used to create a dataframe from Hive table.
+  Spark Dataframe Operations.
   
