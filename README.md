@@ -106,5 +106,7 @@ groupbydata = joindata.groupBy("city").count().sort("city")
   withColumn - adds an another column 
   ALias - replaces the column
   
+  Fixed width file format can be read only via applying substr, as all data will be read in a single column.
+  
   
   
