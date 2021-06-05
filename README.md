@@ -102,4 +102,9 @@ groupbydata = joindata.groupBy("city").count().sort("city")
   With WholeText as True - df.collect() - works as :
   Dict[Row(value= 'hello'\n'Spark')]
   
+  Difference between withColumn & Alias:
+  withColumn - adds an another column 
+  ALias - replaces the column
+  
+  
   
