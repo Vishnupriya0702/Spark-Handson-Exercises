@@ -65,5 +65,21 @@ groupbydata = joindata.groupBy("city").count().sort("city")
   Parquet Files: cannot be read in RDD
   We can read through SQL COntext, SparkSession.
   
+  Spark read & Load options :
+  Spark.read.Parquet().option().load(filepath).save(save in a filename).write().bucketby("columnname", "total numbe rof Buckets).sort().partitionBy()
+  
+  There are 4 types of Save Mode:
+  SaveMode.ErrorIfExists()
+  SaveMode.Append()
+  SaveMod.Overwrite()
+  SaveMode.Ignore()
+  
+  Generic File Load options:
+  1. Use IgnoreCorruptfiles
+  2. Use Missing files
+  3. PathGlobal FIlter
+  4.Recursive file lookup
+  5.Modification TIme path filters - to apply the filters as Modificationtimebefore, Modificationtimeafter
+ 
 
   
