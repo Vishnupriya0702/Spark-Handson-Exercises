@@ -67,6 +67,7 @@ groupbydata = joindata.groupBy("city").count().sort("city")
   
   Spark read & Load options :
   Spark.read.Parquet().option().load(filepath).save(save in a filename).write().bucketby("columnname", "total numbe rof Buckets).sort().partitionBy()
+  Quote, escape characters - these are mainly used to ignore the , comma characters inside the Quotes.
   
   There are 4 types of Save Mode:
   SaveMode.ErrorIfExists()
@@ -82,4 +83,23 @@ groupbydata = joindata.groupBy("city").count().sort("city")
   5.Modification TIme path filters - to apply the filters as Modificationtimebefore, Modificationtimeafter
  
 
+  Sparkseesion can be imported from pyspark.sql.
+  val spark = Sparksession(conf)
+  
+  Schema Definition:
+  toDF - will use to convert to Dataframe
+  SructType(StructField)
+  TO cast- we have to import type 
+  orders.select(orders.order_id.cast("int"), orders.order_date, )
+  WithCOlumn - updating the transformation of an existing column. 
+  Alias - used to convert the data into ALIAS.
+  
+  WholeText in Df: Its an interesting concept where the df data( all row values) is stored in all single line separated by \n.
+  For example :
+   df1 =spark.read.text("/user/itv000076/warehouse/itv000076_retaildb_txt.db/orders/part-00000", wholetext=True)
+  withour Wholetext as True - df.collect() - works as returns list :
+  Dict[Row(value= 'hello'), Row(value ='Spark')]
+  With WholeText as True - df.collect() - works as :
+  Dict[Row(value= 'hello'\n'Spark')]
+  
   
