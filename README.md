@@ -29,6 +29,8 @@ MapPartitions :Use Case : (If we want to add the timestamp column, or if we want
      sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db --username retail_user --password itversity --table customers --as-textfile --fields-terminated-by '|' --warehouse-dir set1/problem1 --delete-target-dir
   sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db --username retail_user --password itversity --table orders --as-textfile --fields-terminated-by '|' --warehouse-dir set1/problem1 --delete-target-dir
   
+  
+   df3=df2.select(df2.order_id, df2.order_customer_id, df2.order_status, df2.withColumn("order_date1", from_unixtime((df2.order_date1/100).cast("timestamp"))))
   To find the pending Orders in the city :
   
   Handling Tuples in Spark :
@@ -110,4 +112,12 @@ groupbydata = joindata.groupBy("city").count().sort("city")
   
   Spark.read.table - is used to create a dataframe from Hive table.
   Spark Dataframe Operations.
+  
+  
+  2. Find out the average revenue per day from the sales Data.
+  Creation of files is completed:
+  sqoop eval --connect jdbc:mysql://ms.itversity.com/retail_db --username retail_user --password itversity --e "SELECT count(1) from orders"
+  sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db  --username retail_user --password itversity --table orders --as-parquetfile --warehouse-dir set1/problem2 --delete-target-dir
+sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db --username retail_user --password itversity --table order_items --as-parquetfile --warehouse-dir set1/problem2 --delete-target-dir
+  
   
