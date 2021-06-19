@@ -134,4 +134,9 @@ sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db --username retail
   
   withColumn is mainly used for the Adding, updating, renaming the new or existing column.
   
+  SQL Solution:
+   (Select to_date(from_unixtime(o.order_date/1000)) as order_date, \
+ avg(oi.order_item_subtotal)as revenue from o join oi on o.order_id=oi.order_item_order_id \
+ group by to_date(from_unixtime(o.order_date/1000))) a order by a.order_date")
+  
   
