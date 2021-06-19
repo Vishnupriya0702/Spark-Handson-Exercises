@@ -121,3 +121,17 @@ groupbydata = joindata.groupBy("city").count().sort("city")
 sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db --username retail_user --password itversity --table order_items --as-parquetfile --warehouse-dir set1/problem2 --delete-target-dir
   
   
+  Notes from 06/19 exercise:
+  In Dataframe
+  1. Find the average Revenue per day.
+  Code:
+  orders_DF = spark.read.parquet("set1/problem2/orders/8326cc1c-ef14-48df-bfd6-4049e0474bc9.parquet")
+  order_items_DF =spark.read.parquet("set1/problem2/order_items/99eb849d-acfc-4aef-aeb8-c1582157e3bd.parquet")
+  orders_join = orders_DF.join(order_items_DF, orders_DF.order_id==order_items_DF.order_item_order_id, "inner")
+   from pyspark.sql.functions import avg
+  group_df = orders_join.groupby("order_date").agg(avg("order_item_subtotal").alias("Revenue"))
+  output = group_df.write.format("csv").mode("append").save("set1/problem2/solution")
+  
+  withColumn is mainly used for the Adding, updating, renaming the new or existing column.
+  
+  
