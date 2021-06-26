@@ -170,4 +170,21 @@ final_df = df_select.select(df_select.product_category_id, df_select.product_nam
  df_select = df_join.groupBy(df_join.order_customer_id).agg(count(df_join.order_id).alias("count"))
  df_join = df_select.join(Customers_select, df_select.order_customer_id==Customers_select.customer_id, 'inner')
  df_join = df_select.join(Customers_select, df_select.order_customer_id==Customers_select.customer_id, 'inner').select(Customers_select.customer_fname, Customers_select.customer_lname, Customers_select.city, Customers_select.state)
+                                                                                                              
+                                                                                                              
+                                                                                                              
+Problem Statement:
+   1. Product department wants to revisit the product pricing and they want to know how many products in each categories that has pricing more than $500
+
+from pyspark.sql import HiveContext
+from pyspark.sql.functions import sum, count                                                                                                              
+products_df = spark.sql("Select * from problem2.products")
+categories_df =saprl.sql("Select * from problem2.categories")
+df_product_data= products_df.groupBy(products_df.product_category_id).agg(count(products_df.product_id).alias("product_count"), sum(products_df.product_price).alias("product_sum")).where("product_sum>500")
+df_join = df_product_data.join("categories_df", df_product_data.product_category_id==categories_df.category_id, "inner").select(categories_df.category_name,df_product_data.product_count)
+res = df_join.repartition(2).write.json("set1/problem2/solution")
+                                                                                                              
+                                                                                                                                                                                                                           
+                                                                                                              
+                                                                                                              
                                                                                                             
