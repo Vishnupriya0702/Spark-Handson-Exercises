@@ -141,5 +141,33 @@ sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db --username retail
   
   Window Spec function will not accept orderby in desc
   
+Question 7: Read the table and load the data into the Hive table partitioned by ORDER_DATE.
+  sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db  --username retail_user --password itversity --table orders --as-parquetfile  --warehouse-dir set1/problem6 --delete-target-dir
+  
+  sqoop import --connect jdbc:mysql://localhost/retail_db --username root --password cloudera --table orders --as-parquetfile --warehouse-dir set1/problem6 --delete-target-dir
+ sqoop import --connect jdbc:mysql://localhost/retail_db --username root --password cloudera --table products --as-textfile --fields-terminated-by '|' --warehouse-dir set1/problem7 --delete-target-dir
   
   
+Difference between Repartition and coalesce:
+df_finalSelect =df_select.select("product_name", "product_price").filter(df_select.product_price>100).orderBy(df_select.product_price.desc()).coalesce(2).write.format("csv").mode("overwrite").option("header", "true").save("set1/problem7/products/solution2")
+coalesce - only to reduce the partiitons. if we give the highest value- it returns to the existing partition data.
+  
+Coalsce will behave as Repartition, if i set the shuffle to true and if i give large number of partitions.
+Coalece ramins unchanged ,even if i give more partitions ,if i sent the shuffle to false.
+  
+  ind the maximum product out of each category:
+from pyspark.sql import Window
+import pyspark.sql.functions as f
+final_df = df_select.select(df_select.product_category_id, df_select.product_name, df_select.product_price,
+ f.rank().over(Window.partitionBy(df_select.product_category_id).orderBy((df_select.product_price).desc())).alias("rank")).filter("rank==1")
+  
+ Find the customers who placed more than 2 orders between Nov 2013 and Jan 2014
+  Customers_df =spark.read.format("csv").option("delimiter",',').option("inferschema", 'true').option("header",'false').load("set2/problem1/customers")
+  Orders_df = spark.read.format("csv").option("inferSchema",'true').option("delimiter",',').option("header",'false').load("set2/problem1/orders")
+  Orders_select = Orders_df.select(Orders_df._c0.alias("order_id"), Orders_df._c1.alias("order_date"), Orders_df._c2.alias("order_customer_id"), Orders_df._c3.alias("order_status"))
+   Customers_select = Customers_df.select(Customers_df._c0.alias("customer_id"), Customers_df._c1.alias("customer_fname"), Customers_df._c2.alias("customer_lname"), Customers_df._c5.alias("city"), Customers_df._c6.alias("state"))
+  Orders_filter =Orders_select1.filter((Orders_select1.order_date>="2013-11") & (Orders_select1.order_date<="2014-01"))
+ df_select = df_join.groupBy(df_join.order_customer_id).agg(count(df_join.order_id).alias("count"))
+ df_join = df_select.join(Customers_select, df_select.order_customer_id==Customers_select.customer_id, 'inner')
+ df_join = df_select.join(Customers_select, df_select.order_customer_id==Customers_select.customer_id, 'inner').select(Customers_select.customer_fname, Customers_select.customer_lname, Customers_select.city, Customers_select.state)
+                                                                                                            
