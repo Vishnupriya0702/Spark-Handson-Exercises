@@ -184,7 +184,17 @@ df_product_data= products_df.groupBy(products_df.product_category_id).agg(count(
 df_join = df_product_data.join("categories_df", df_product_data.product_category_id==categories_df.category_id, "inner").select(categories_df.category_name,df_product_data.product_count)
 res = df_join.repartition(2).write.json("set1/problem2/solution")
                                                                                                               
-                                                                                                                                                                                                                           
+Problem Statement :
+You have been asked to find out a summary of unfulfilled orders between July 2013 and July 2014 by each month
+
+Unfulfilled order are those which are not COMPLETE status
+
+ df_orders.select(df_orders._c0.alias("order_id"), date_format(to_date(df_orders._c1),"YYYYMM").alias("order_date"), df_orders._c3.alias("order_status"))
+ df_select_filter =df_select.filter((order_status!="COMPLETE")& ((order_date>="201311") & (order_date<="201411")))
+from pyspark.sql.functions import count
+df_final =df_select_filter.groupBy("order_date").agg(count(df_select_filter.order_id).alias("order_id_count"), count(df_select_filter.order_status).alias("order_status_count"))
+res = df_final.repartition(2).write("compression","snappy").parquet("set2/problem3/solution")
+                                                                                                          
                                                                                                               
                                                                                                               
                                                                                                             
